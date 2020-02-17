@@ -13,3 +13,15 @@ class InputError(Error):
     def __init__(self, expression, message):
         self.expression = expression
         self.message = message
+
+class ConnectError(Error):
+    """Exception raised for errors in the database connection.
+
+    Attributes:
+        expression -- sgdb connection in which the error occurred
+        message -- explanation of the error
+    """
+
+    def __init__(self, expression, message):
+        self.expression = expression
+        self.message = message

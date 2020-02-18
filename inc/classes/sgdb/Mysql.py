@@ -15,10 +15,6 @@ class Mysql:
         self.host = kwargs.get('host')
         self.port = kwargs.get('port') if kwargs.get('port')  else '3306'
         self.database = kwargs.get('database')
-        self.connect()
-
-    
-
 
     def connect(self):
         try:
@@ -32,14 +28,22 @@ class Mysql:
             cursor.execute("SELECT version();")
             record = cursor.fetchone()
             print("You are connected to - ", record,"\n")
-            self.connection = connection
+            # self.conn = connection
+            return connection
 
         except (Exception, mys.Error) as error :
             raise ConnectError("Error while connecting to MySQL", error)
     
-    def read_tables(self):
-        cursor = self.connection.cursor()
+    def read_tables(self, conn):
+        tables = []
+        cursor = conn.cursor()
         cursor.execute("SHOW TABLES;")
-        record = cursor.fetchall()
-        print(record)
+        resp = cursor.fetchall()
+    
+        for table in resp:
+            if table:
+                tables.append(table[0])
+    
+        return tables
+ 
 

@@ -15,8 +15,6 @@ class Pgsql:
         self.host = kwargs.get('host')
         self.port = kwargs.get('port')
         self.database = kwargs.get('database')
-        self.connect()
-
     
 
 
@@ -38,7 +36,20 @@ class Pgsql:
             cursor.execute("SELECT version();")
             record = cursor.fetchone()
             print("You are connected to - ", record,"\n")
-            self.connection = connection
+            # self.connection = connection
+            return connection
 
         except (Exception, psycopg2.Error) as error :
             raise ConnectError("Error while connecting to PostgreSQL", error)
+
+    def read_tables(self, conn):
+        tables = []
+        cursor = conn.cursor()
+        cursor.execute("select * from information_schema.tables where table_schema='public';")
+        resp = cursor.fetchall()
+    
+        for table in resp[0]:
+            if table:
+                tables.append(table)
+    
+        return tables
